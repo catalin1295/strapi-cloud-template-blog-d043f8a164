@@ -62,10 +62,10 @@ export default function About() {
                   Despre mine
                 </p>
                 <h1 className="font-heading font-black text-4xl md:text-5xl text-gray-900 dark:text-white mb-2">
-                  {attr.name || 'Prenume Nume'}
+                  {attr.name || 'Ticu Catalin'}
                 </h1>
                 <p className="font-accent italic text-indigo-500 dark:text-indigo-400 text-xl mb-5">
-                  {attr.role || 'Student în Informatică Aplicată'}
+                  {attr.role || 'Student în Informatică Informatica'}
                 </p>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed max-w-xl">
                   {attr.bio || 'Pasionat de web development modern.'}
