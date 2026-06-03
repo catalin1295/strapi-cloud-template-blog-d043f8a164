@@ -145,41 +145,43 @@ export default function Home() {
             </h2>
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-28" />)}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {categories.map(cat => {
-                const articlesInCat = articles.filter(
-                  a => a.attributes.category?.data?.attributes?.slug === cat.attributes.slug
-                ).length;
-                return (
-                  <Link
-                    key={cat.id}
-                    to={`/blog?category=${cat.attributes.slug}`}
-                    className="group p-6 bg-white dark:bg-slate-800/60 rounded-2xl
-                      border border-gray-100 dark:border-slate-700
-                      hover:border-indigo-300 dark:hover:border-indigo-500
-                      hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-500/10
-                      transition-all duration-300"
-                  >
-                    <div className="text-3xl mb-3">
-                      {CAT_ICON[cat.attributes.name] || '📌'}
-                    </div>
-                    <h3 className="font-heading font-bold text-gray-900 dark:text-white
-                      group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                      {cat.attributes.name}
-                    </h3>
-                    <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                      {articlesInCat} {articlesInCat === 1 ? 'articol' : 'articole'}
-                    </p>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-28" />)}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {categories.map(cat => {
+              // MODIFICARE AICI: Am adăugat ?. peste tot pentru a preveni crash-ul dacă datele lipsesc
+              const articlesInCat = articles ? articles.filter(
+                a => a?.attributes?.category?.data?.attributes?.slug === cat?.attributes?.slug
+              ).length : 0;
+        
+              return (
+                <Link
+                  key={cat.id}
+                  to={`/blog?category=${cat?.attributes?.slug || ''}`}
+                  className="group p-6 bg-white dark:bg-slate-800/60 rounded-2xl
+                    border border-gray-100 dark:border-slate-700
+                    hover:border-indigo-300 dark:hover:border-indigo-500
+                    hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-500/10
+                    transition-all duration-300"
+                >
+                  <div className="text-3xl mb-3">
+                    {CAT_ICON[cat?.attributes?.name] || '📌'}
+                  </div>
+                  <h3 className="font-heading font-bold text-gray-900 dark:text-white
+                    group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    {cat?.attributes?.name}
+                  </h3>
+                  <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                    {articlesInCat} {articlesInCat === 1 ? 'articol' : 'articole'}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        )}
         </div>
       </section>
 
