@@ -10,13 +10,17 @@ const CAT_GRADIENT = {
 };
 
 function formatDate(iso) {
+  if (!iso) return ''; // Siguranță în cazul în care data lipsește
   return new Date(iso).toLocaleDateString('ro-RO', {
     year: 'numeric', month: 'long', day: 'numeric',
   });
 }
 
 export default function ArticleCard({ article }) {
-  const { title, slug, excerpt, publishedAt, category, image } = article.attributes;
+  // SECURIRE 1: Verificăm dacă obiectul article sau attributes există, altfel punem un obiect gol ca fallback
+  const attributes = article?.attributes || {};
+  const { title = 'Articol fără titlu', slug = '', excerpt = '', publishedAt, category, image } = attributes;
+
   const catName = category?.data?.attributes?.name;
   const catSlug = category?.data?.attributes?.slug;
   const imgUrl  = strapiImageUrl(image);
@@ -40,7 +44,8 @@ export default function ArticleCard({ article }) {
         ) : (
           <div className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center`}>
             <span className="font-heading font-black text-6xl text-white/20 select-none">
-              {title[0]}
+              {/* SECURIRE 2: Prevenim crash-ul dacă titlul este cumva gol */}
+              {title ? title[0] : '📝'}
             </span>
           </div>
         )}
@@ -70,8 +75,9 @@ export default function ArticleCard({ article }) {
           <time className="text-xs text-gray-400 dark:text-gray-500">
             {formatDate(publishedAt)}
           </time>
+          {/* SECURIRE 3: Dacă nu există slug, link-ul trimite la pagina de blog, nu lasă aplicația să crape */}
           <Link
-            to={`/blog/${slug}`}
+            to={slug ? `/blog/${slug}` : '/blog'}
             className="text-xs font-semibold text-indigo-600 dark:text-indigo-400
               hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
           >
